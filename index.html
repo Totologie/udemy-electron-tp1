@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tests Electron</title>
+</head>
+<body>
+    <h1>Informations vidéos</h1> 
+    <form>
+        <div>
+            <label>Choisir un fichier</label>
+            <input id="inputVideo" type="file" accept="video/*" /> <!--mkv, video/avi, video/mp4" />-->
+        </div>
+        <div>
+            <button type="submit">Get length !</button>
+            <label id="labelVideoLength"></label>
+        </div>
+    </form>
+
+    <script>
+        const electron = require('electron')
+        const { ipcRenderer } = electron
+         
+
+
+        document.querySelector('form').addEventListener('submit', (event) => {
+            event.preventDefault()
+
+            const { path } = document.querySelector('input#inputVideo').files[0]
+
+            ipcRenderer.send('get:video.length', path)
+
+        })
+
+        ipcRenderer.on('get:video.length:return', (event, length) => {
+            document.querySelector('label#labelVideoLength').innerText = length            
+        })
+    </script>
+</body>
+</html>
